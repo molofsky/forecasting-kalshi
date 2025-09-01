@@ -7,7 +7,7 @@ This repository includes quantitative modeling techniques for price prediction f
 # What is in this repo?
 - `data`: All files for dataset processing, feature engineering, and dataloaders for feeding training data to models.
 - `models`: Contains Scikit-learn and PyTorch models, including linear regression, decision tree, ensembles, artifical neural networks, and autoregressive integrated moving average methods, for predicting daily price changes.
-- `plots`: All files for plotting dataset and visualizing 
+- `plots`: Includes plotting and summary statistics.
 
 # Dataset
 
