@@ -1,11 +1,6 @@
-import os
-import sys
-sys.path.insert(0, '/Users/adrianmolofsky/Downloads/CS229-Project/')
-
 import numpy as np
 import pandas as pd
-from sklearn.metrics import (
-    mean_squared_error, r2_score, mean_absolute_error,
+from sklearn.metrics import (r2_score, mean_absolute_error,
     mean_absolute_percentage_error, explained_variance_score
 )
 from statsmodels.tsa.arima.model import ARIMA
@@ -15,10 +10,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
-
-# ------------------------------
-# 1. Data Preparation
-# ------------------------------
 
 # Load the data with 'date' parsed as datetime
 df = pd.read_csv("data/kalshi.csv", parse_dates=['date'])
@@ -47,10 +38,6 @@ y_train, y_test = y.iloc[:train_size], y.iloc[train_size:]
 # Verify the split
 print(f"\nTraining samples: {len(X_train)}")
 print(f"Testing samples: {len(X_test)}")
-
-# ------------------------------
-# 2. Evaluation Function
-# ------------------------------
 
 def evaluate_model(name, y_true, y_pred, additional_metrics=False):
     n = len(y_true)
@@ -86,10 +73,6 @@ def evaluate_model(name, y_true, y_pred, additional_metrics=False):
         print(f"  MAPE: {mape:.6f}")
         print(f"  EVS: {evs:.6f}")
     print()
-
-# ------------------------------
-# 3. ARIMA Model
-# ------------------------------
 
 # ARIMA requires a univariate time series
 # We'll model 'target' as the time series
@@ -131,10 +114,6 @@ forecast_arima.index = test_arima.index
 
 # Evaluate ARIMA
 evaluate_model("ARIMA", test_arima, forecast_arima)
-
-# ------------------------------
-# 4. ANN Model
-# ------------------------------
 
 # Feature Scaling for ANN
 scaler = StandardScaler()
@@ -181,10 +160,6 @@ y_pred_ann = model_ann.predict(X_test_scaled).flatten()
 
 # Evaluate ANN
 evaluate_model("ANN", y_test, y_pred_ann, additional_metrics=True)
-
-# ------------------------------
-# 5. Visualization
-# ------------------------------
 
 # Plot actual vs predicted for ARIMA and ANN
 plt.figure(figsize=(14,7))

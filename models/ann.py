@@ -1,10 +1,7 @@
-import os
-import sys
-import numpy as np
 import pandas as pd
 from sklearn.metrics import (
     mean_squared_error, r2_score, mean_absolute_error,
-    mean_absolute_percentage_error, explained_variance_score
+    mean_absolute_percentage_error
 )
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential
@@ -13,10 +10,6 @@ from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 from tensorflow.keras.optimizers import Adam
 from sklearn.model_selection import ParameterGrid
-
-# ------------------------------
-# 1. Data Preparation
-# ------------------------------
 
 # Load the data with 'date' parsed as datetime
 df = pd.read_csv("data/kalshi.csv", parse_dates=['date'])
@@ -41,10 +34,6 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# ------------------------------
-# 2. Evaluation Function
-# ------------------------------
-
 def evaluate_model(name, y_true, y_pred):
     mse = mean_squared_error(y_true, y_pred)
     mae = mean_absolute_error(y_true, y_pred)
@@ -56,10 +45,6 @@ def evaluate_model(name, y_true, y_pred):
     print(f"  MAPE: {mape:.6f}")
     print(f"  R²: {r2:.6f}")
     print()
-
-# ------------------------------
-# 3. Hyperparameter Tuning
-# ------------------------------
 
 # Define the model-building function
 def build_ann_model(input_dim, neurons1, neurons2, dropout_rate, learning_rate):
@@ -115,10 +100,6 @@ for params in ParameterGrid(param_grid):
 print(f"Best Parameters: {best_params}")
 print(f"Best MSE: {best_mse}")
 
-# ------------------------------
-# 4. Train Best Model
-# ------------------------------
-
 # Train final model with best parameters
 final_model = build_ann_model(
     input_dim=X_train_scaled.shape[1],
@@ -139,10 +120,6 @@ history = final_model.fit(
 # Predict and evaluate
 y_pred_final = final_model.predict(X_test_scaled).flatten()
 evaluate_model("Final ANN Model", y_test, y_pred_final)
-
-# ------------------------------
-# 5. Plot Training History
-# ------------------------------
 
 plt.plot(history.history['loss'], label='Training Loss')
 plt.plot(history.history['val_loss'], label='Validation Loss')

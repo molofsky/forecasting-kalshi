@@ -5,8 +5,9 @@
 This repository includes quantitative modeling techniques for price prediction for high-frequency trading, exploring whether the innately sentiment- and news-driven prices of binary event contracts can be accurately predicted with machine learning methods purely on the basis of timeprice data. This project benchmarks the performance of linear regression, decision trees, ensembles, artificial neural networks, and autoregressive integrated moving avergae methods on Kalshi binary event contracts.
 
 # What is in this repo?
-- `data`: Contains dataset processing, feature engineering, and dataloaders for feeding training data to models
-- `models`: Contains PyTorch models, such as ensembles, artifical neural networks, and autoregressive integrated moving average methods,for predicting daily price changes
+- `data`: All files for dataset processing, feature engineering, and dataloaders for feeding training data to models.
+- `models`: Contains Scikit-learn and PyTorch models, including linear regression, decision tree, ensembles, artifical neural networks, and autoregressive integrated moving average methods, for predicting daily price changes.
+- `plots`: All files for plotting dataset and visualizing 
 
 # Dataset
 
@@ -17,8 +18,8 @@ This dataset derives from 10,065 examples of High-volume binary event contracts 
 1. Create a Python virtual environment
 
    ```
-   python3 -m venv forecasting-kalshi
-   source forecasting-kalshi/bin/activate
+   python3 -m venv forecasting-kalshi-env
+   source forecasting-kalshi-env/bin/activate
    ```
    
 2. Install Python dependencies
@@ -29,7 +30,7 @@ This dataset derives from 10,065 examples of High-volume binary event contracts 
 
 3. Start training
    ```
-   python models.py
+   python models/ann.py
    ```
 
 # Contributing

@@ -1,22 +1,11 @@
-import os
-import sys
-sys.path.insert(0, '/Users/adrianmolofsky/Downloads/CS229-Project/')
-
-import torch
 import numpy as np
-from torch import nn
 import pandas as pd
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, mean_absolute_percentage_error, explained_variance_score
+from sklearn.metrics import r2_score, mean_absolute_error, mean_absolute_percentage_error, explained_variance_score
 
-from sklearn.linear_model import BayesianRidge
-from sklearn.kernel_ridge import KernelRidge
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.linear_model import SGDRegressor, LinearRegression, Ridge, Lasso, ElasticNet
-from sklearn.neural_network import MLPRegressor
-from sklearn.svm import SVR
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.linear_model import SGDRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 from catboost import CatBoostRegressor
 from scipy.stats import uniform, randint
 

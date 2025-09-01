@@ -1,5 +1,3 @@
-import os
-import sys
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -7,7 +5,6 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
-import math
 
 # Load your data
 df = pd.read_csv("data/kalshi.csv")
