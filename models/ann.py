@@ -85,7 +85,7 @@ for params in ParameterGrid(param_grid):
     history = model.fit(
         X_train_scaled, y_train,
         validation_split=0.2,
-        epochs=50,  # Fewer epochs for testing
+        epochs=50,  
         batch_size=params['batch_size'],
         callbacks=[early_stop],
         verbose=0
@@ -100,7 +100,6 @@ for params in ParameterGrid(param_grid):
 print(f"Best Parameters: {best_params}")
 print(f"Best MSE: {best_mse}")
 
-# Train final model with best parameters
 final_model = build_ann_model(
     input_dim=X_train_scaled.shape[1],
     neurons1=best_params['neurons1'],
@@ -117,7 +116,6 @@ history = final_model.fit(
     verbose=1
 )
 
-# Predict and evaluate
 y_pred_final = final_model.predict(X_test_scaled).flatten()
 evaluate_model("Final ANN Model", y_test, y_pred_final)
 

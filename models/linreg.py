@@ -23,10 +23,8 @@ def evaluate_model(model, X_test, y_test):
     return mse, r2, mae, y_pred
 
 def main():
-    # Load the dataset
     df = load_data('kalshi.csv')
     
-    # Define features and target variable
     features = [
         'price', 'price_change_1d', 'price_change_3d', 'price_change_7d',
         'rolling_mean_7d', 'rolling_std_7d', 'price_acceleration',
@@ -36,22 +34,6 @@ def main():
     
     X = df[features]
     y = df['target']
-    
-    # Check for NaN values
-    if X.isnull().values.any() or y.isnull().values.any():
-        print("Warning: NaN values found in the dataset. Dropping rows with NaN values.")
-        df = df.dropna()
-        X = df[features]
-        y = df['target']
-    
-    # Check for infinite values
-    if np.isinf(X.values).any() or np.isinf(y.values).any():
-        print("Warning: Infinite values found in the dataset. Replacing infinite values with NaN.")
-        X.replace([np.inf, -np.inf], np.nan, inplace=True)
-        y.replace([np.inf, -np.inf], np.nan, inplace=True)
-        df = df.dropna()
-        X = df[features]
-        y = df['target']
     
     # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -82,7 +64,6 @@ def main():
     plt.xticks(rotation=45)
     plt.legend()
     plt.tight_layout()
-    plt.savefig("actual_vs_predicted_prices.png")  # Save the plot
     plt.show()
     
     # Calculate average forecast error
@@ -121,10 +102,10 @@ def main():
     plt.figure(figsize=(12, 8))
     sns.heatmap(covariance_matrix, annot=True, fmt=".2f", cmap='coolwarm', square=True)
     plt.title('Covariance Matrix of Features', fontsize=18)
-    plt.savefig("covariance_matrix.png")  # Save the covariance matrix plot
+    plt.savefig("covariance_matrix.png")
     plt.show()
 
-    # Print features with low importance (correlation coefficient < 0.1 in magnitude)
+    # Print features with low importance
     low_importance_features = [(feature, coef) for feature, coef in zip(features, model.coef_) if abs(coef) < 0.1]
     
     if low_importance_features:
@@ -144,7 +125,7 @@ def main():
     plt.xlabel('Predicted Values', fontsize=16)
     plt.ylabel('Residuals', fontsize=16)
     plt.title('Residuals Plot', fontsize=18)
-    plt.savefig("residuals_plot.png")  # Save the residuals plot
+    plt.savefig("residuals_plot.png")  
     plt.show()
 
 if __name__ == "__main__":

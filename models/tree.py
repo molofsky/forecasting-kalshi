@@ -21,10 +21,8 @@ def evaluate_model(model, X_test, y_test):
     return mse, r2, mae, y_pred
 
 def main():
-    # Load the dataset
     df = load_data('kalshi.csv')
     
-    # Define features and target variable
     features = [
         'price_change_7d',
         'time_since_start',
@@ -34,9 +32,6 @@ def main():
     X = df[features]
     y = df['target']
     
-    
-    
-    # K-Fold Cross-Validation
     kf = KFold(n_splits=10, shuffle=True, random_state=42)  # 10-fold cross-validation
     mae_list = []
 
@@ -52,19 +47,14 @@ def main():
     # Perform grid search
     grid_search = GridSearchCV(DecisionTreeRegressor(random_state=42), param_grid, cv=kf, scoring='neg_mean_squared_error')
     grid_search.fit(X, y)
-
-    # Get the best model from Grid Search
     best_model = grid_search.best_estimator_
 
-    # Evaluate the best model using K-Fold Cross-Validation
     for train_index, test_index in kf.split(X):
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         
-        # Train the best decision tree regression model
         model = train_decision_tree(X_train, y_train, grid_search.best_params_)
-        
-        # Evaluate the model on the test set
+
         mse_test, r2, mae, y_pred = evaluate_model(model, X_test, y_test)
         mae_list.append(mae)
 
@@ -78,7 +68,7 @@ def main():
         for feature, importance in zip(features, best_model.feature_importances_):
             print(f'{feature}: {importance:.4f}')
     
-    # Print features with low importance (magnitude < 0.1)
+    # Print features with low importance
     low_importance_features = [(feature, importance) for feature, importance in zip(features, best_model.feature_importances_) if abs(importance) < 0.1]
     
     if low_importance_features:

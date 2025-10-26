@@ -1,18 +1,15 @@
 import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
 import warnings
 import glob
 import os
 warnings.filterwarnings('ignore')
 
-# Load and prepare the data
 def prepare_kalshi_data(csv_path):
     df = pd.read_csv(csv_path)
     market_question = df['Market'].iloc[0]
     df['market_question'] = market_question
     
-    # Convert Forecast column from percentage to float (0-1)
+    # Convert Forecast column from percentage to float
     df['price'] = df['Forecast'].str.rstrip('%').astype(float) / 100
     
     # Convert Timestamp to datetime
@@ -20,7 +17,7 @@ def prepare_kalshi_data(csv_path):
     df['date'] = df['Timestamp'].dt.date
     df['date'] = pd.to_datetime(df['date'])
     
-    # Group by date and get last price of each day (closing price)
+    # Group by date and get last price of each day
     daily_df = df.groupby('date').agg({
         'price': 'last',
         'market_question': 'first'
@@ -42,13 +39,12 @@ def engineer_features(df):
     df['rolling_std_7d'] = df['price'].rolling(window=7).std()
     
     # Price momentum and acceleration
-    df['momentum_1d'] = df['price_change_1d'] / df['price'].shift(1)  # Normalized price change
+    df['momentum_1d'] = df['price_change_1d'] / df['price'].shift(1)
     df['momentum_3d'] = df['price_change_3d'] / df['price'].shift(3)
     df['momentum_7d'] = df['price_change_7d'] / df['price'].shift(7)
     
     # Time since start
     df['time_since_start'] = (df['date'] - df['date'].min()).dt.days
-    # df['time_since_start'] = (df['date'] - df['date'].min()).dt.days.astype(int)
     
     # Price momentum and acceleration
     df['price_acceleration'] = df['price_change_1d'].diff()
@@ -68,15 +64,16 @@ def engineer_features(df):
     df['mean_crossover'] = (df['price'] > df['rolling_mean_7d']).astype(int)
     df['price_range_ratio'] = (df['price_7d_high'] - df['price_7d_low']) / df['rolling_mean_7d']
     
-    # Additional recommended features
-    df['volatility_trend'] = df['rolling_std_7d'].diff()  # Change in volatility
+    # Change in volatility
+    df['volatility_trend'] = df['rolling_std_7d'].diff() 
     df['days_to_7d_high'] = df.groupby((df['price'] == df['price_7d_high']).cumsum())['price'].cumcount()
     
-    # Calculate target variable (percentage price change)
-    df['next_close'] = df['price'].shift(-1)  # Close price of the next day
-    df['target'] = (df['next_close'] - df['price']) / df['price']  # (Next Close - Current Close) / Current Close
+    # Close price of the next day
+    df['next_close'] = df['price'].shift(-1)
     
-    # Drop the next_close column as it's no longer needed
+    # Precentage price change
+    df['target'] = (df['next_close'] - df['price']) / df['price']
+    
     df.drop(columns=['next_close'], inplace=True)
     
     return df
@@ -93,14 +90,11 @@ def process_all_kalshi_data(directory_path):
     for csv_file in csv_files:
         print(f"Processing {csv_file}...")
         try:
-            # Load and prepare daily data
             df = prepare_kalshi_data(csv_file)
             
-            # Add market name
             market_name = csv_file.split('kalshi-chart-data-')[-1].replace('.csv', '')
             df['market'] = market_name
             
-            # Add features
             df = engineer_features(df)
             all_processed_data.append(df)
             
@@ -110,11 +104,7 @@ def process_all_kalshi_data(directory_path):
     
     if all_processed_data:
         combined_df = pd.concat(all_processed_data, ignore_index=True)
-        
-        # Drop rows with NaN values
         combined_df = combined_df.dropna()
-        
-        # Select final features
         features = [
             'market', 'market_question', 'date', 'price',
             'price_change_1d', 'price_change_3d', 'price_change_7d',
@@ -127,8 +117,6 @@ def process_all_kalshi_data(directory_path):
         ]
         
         final_df = combined_df[features]
-        
-        # Save combined data
         final_df.to_csv('kalshi.csv', index=False)
         
         print(f"\nProcessed {len(csv_files)} files")

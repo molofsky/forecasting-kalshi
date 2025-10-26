@@ -11,10 +11,8 @@ from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 import matplotlib.pyplot as plt
 
-# Load the data with 'date' parsed as datetime
 df = pd.read_csv("data/kalshi.csv", parse_dates=['date'])
 
-# Sort the data by date to ensure chronological order
 df = df.sort_values('date')
 
 # Display the first few rows to verify sorting
