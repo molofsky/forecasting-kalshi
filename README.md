@@ -2,7 +2,7 @@
 
 # Overview 
 
-This repository inclues time series forecasting from high volume binary event contacts, investigating whether the innately sentiment- and news-driven prices of these contracts can be accurately predicted purely on the basis of timeprice data. This project benchmarks the performance of linear regression, decision trees, ensembles, artificial neural networks, and autoregressive integrated moving average methods on Kalshi binary event contracts.
+This repository includes time series forecasting from high volume binary event contacts, investigating whether the innately sentiment- and news-driven prices of these contracts can be accurately predicted purely on the basis of timeprice data. This project benchmarks the performance of linear regression, decision trees, ensembles, artificial neural networks, and autoregressive integrated moving average methods on Kalshi binary event contracts.
 
 # What is in this repo?
 - `data`: Contains dataset collection, preprocessing, and feature engineering.
